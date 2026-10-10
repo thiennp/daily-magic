@@ -1,0 +1,1 @@
+export { resolveMacConnectBootstrapView } from "../resolveMacConnectBootstrapView";

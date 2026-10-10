@@ -55,3 +55,5 @@ Browser presence uses `/api/agent-witch/devices` (AWC hub). **AWL** is Mac-only;
 Install from each origin separately so local and prod stay independent.
 
 Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **62**). Heartbeat `system.ack` advertises that version so connected computers auto-update when local `install-version.json` differs.
+
+Public API of `mac-bootstrap`: import from `mac-bootstrap/public-api/{types,presentation,infrastructure}` only (`MacConnectBootstrapView`, `MacConnectBootstrapClient`, `resolveMacConnectBootstrapView`).

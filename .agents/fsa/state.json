@@ -1,1 +1,11 @@
-{ "completed": [], "units": {} }
+{
+  "completed": ["src/features/agent-witch/mac-bootstrap"],
+  "blocked": {},
+  "rounds": [
+    {
+      "unit": "src/features/agent-witch/mac-bootstrap",
+      "sha": "df72dd07a04f60de7cbbbcb8624ab06f45e58405",
+      "at": "2026-10-10T08:45:04.190Z"
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import MacConnectBootstrapClient from "@/features/agent-witch/mac-bootstrap/MacConnectBootstrapClient";
-import { resolveMacConnectBootstrapView } from "@/features/agent-witch/mac-bootstrap/resolveMacConnectBootstrapView";
+import { MacConnectBootstrapClient } from "@/features/agent-witch/mac-bootstrap/public-api/presentation";
+import { resolveMacConnectBootstrapView } from "@/features/agent-witch/mac-bootstrap/public-api/infrastructure";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { auth } from "@/lib/auth/auth";
 
