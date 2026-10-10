@@ -94,7 +94,9 @@ export const judgeDueSkillChecks = async (input: {
         : choice.kind === "agent" && agentWriter !== null
           ? createAgentAutoSkillCompleter(
               agentWriter as HarnessWriterAgentId,
-              input.folderPath,
+              undefined,
+              undefined,
+              true, // the skill text and run summaries are the whole input: read-only, no project folder
             )
           : async () => ({ ok: false, reason: "judge_unavailable" });
     for (let round = 0; round < MAX_ROUNDS; round += 1) {
