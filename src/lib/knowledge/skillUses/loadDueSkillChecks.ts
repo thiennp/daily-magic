@@ -15,11 +15,14 @@ export type DueSkillCheck = {
   readonly usesAtCheck: number;
   readonly trigger: string;
   readonly skillBody: string;
+  /** Changes the owner already declined for this skill (newest first); not to be proposed again. */
+  readonly declinedNotes: readonly string[];
   /** Finished runs since the previous check of this version (meta only). */
   readonly runs: readonly DueSkillCheckRun[];
 };
 
 const MAX_RUNS_PER_CHECK = 30;
+const MAX_DECLINED_NOTES = 3;
 
 /** Checks waiting for a judge, oldest first, each with the skill text and its window of runs. */
 export const loadDueSkillChecks = async (
@@ -59,6 +62,13 @@ export const loadDueSkillChecks = async (
           ORDER BY u.id
           LIMIT ${MAX_RUNS_PER_CHECK}`,
       );
+      const declined = asRowArray(
+        await sql`
+          SELECT note FROM project_skill_checks
+          WHERE project_id = ${projectId} AND skill_id = ${String(check.skill_id)}
+            AND decision = 'old' AND note IS NOT NULL
+          ORDER BY decided_at DESC LIMIT ${MAX_DECLINED_NOTES}`,
+      );
       return {
         checkId: Number(check.id),
         skillId: String(check.skill_id),
@@ -67,6 +77,7 @@ export const loadDueSkillChecks = async (
         usesAtCheck: Number(check.uses_at_check),
         trigger: String(check.trigger),
         skillBody: String(check.body),
+        declinedNotes: declined.map((row) => String(row.note)),
         runs: runs.map((run) => ({
           outcome: String(run.outcome),
           title: run.title === null ? "(task removed)" : String(run.title),

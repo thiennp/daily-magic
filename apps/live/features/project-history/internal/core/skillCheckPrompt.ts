@@ -22,6 +22,15 @@ const describeRuns = (check: DueSkillCheck): string =>
     )
     .join("\n");
 
+const describeDeclined = (check: DueSkillCheck): string =>
+  (check.declinedNotes ?? []).length === 0
+    ? ""
+    : `\nThe owner already declined these changes; do not propose them again:\n${(
+        check.declinedNotes ?? []
+      )
+        .map((note) => `- ${cap(note, FIELD_CAP)}`)
+        .join("\n")}\n`;
+
 /** Ask whether the skill held up over the runs; strict JSON answer. */
 export const buildSkillCheckPrompt = (check: DueSkillCheck): string =>
   `You review a reusable skill after assistants used it.
@@ -30,7 +39,7 @@ ${check.skillBody.slice(0, SKILL_CAP)}
 
 The skill was used in these finished runs (task titles, outcomes and short summaries only):
 ${describeRuns(check)}
-
+${describeDeclined(check)}
 Decide: "fine" when the skill held up and the failures, if any, are not its fault;
 "improve" when a step is missing, wrong or unclear and a better version would help.
 Answer ONLY strict JSON: {"verdict":"fine"|"improve","note":"<two sentences: what you saw and, for improve, what to change>"}`;

@@ -7,6 +7,8 @@ export type DueSkillCheck = {
   readonly usesAtCheck: number;
   readonly trigger: string;
   readonly skillBody: string;
+  /** Changes the owner already declined for this skill; not to be proposed again. */
+  readonly declinedNotes?: readonly string[];
   readonly runs: readonly {
     readonly outcome: string;
     readonly title: string;

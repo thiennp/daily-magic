@@ -1,6 +1,9 @@
 import type { SkillComparisonAnswer } from "@/features/project-auto-skills/internal/core/projectAutoSkills.type";
 import { canManageAutoSkills } from "@/features/project-auto-skills/internal/infrastructure/canManageAutoSkills";
-import { publishProjectSkill } from "@/features/project-skill-share/public-api/infrastructure";
+import {
+  getProjectSkill,
+  publishProjectSkill,
+} from "@/features/project-skill-share/public-api/infrastructure";
 import {
   decideSkillComparison,
   listSkillComparisons,
@@ -16,7 +19,7 @@ export type AnswerSkillComparisonResult =
 
 /**
  * The owner (or an allowed member) picks a version after the two ran side by
- * side: "new" promotes the draft to the live version, "old" keeps the live one.
+ * side: "new" makes the compared text the live version, "old" keeps the live one.
  * Either way the comparison ends and every assistant reads the live version again.
  */
 export const answerSkillComparison = async (input: {
@@ -39,17 +42,28 @@ export const answerSkillComparison = async (input: {
     return { ok: false, status: 404, message: "Comparison not found." };
   }
   if (input.answer === "new") {
-    // No body: promote the latest draft version, the one being compared.
-    const promoted = await publishProjectSkill({
+    // Publish the text that was compared, not whatever draft is newest now.
+    const compared = await getProjectSkill({
       actorUserId: input.actorUserId,
       args: {
         projectId: input.projectId,
         skillId: comparison.skillId,
-        name: comparison.skillName,
-        kind: "skill",
-        asDraft: false,
+        version: comparison.newVersion,
       },
     });
+    const promoted = compared.ok
+      ? await publishProjectSkill({
+          actorUserId: input.actorUserId,
+          args: {
+            projectId: input.projectId,
+            skillId: comparison.skillId,
+            name: comparison.skillName,
+            body: compared.skill.body,
+            kind: "skill",
+            asDraft: false,
+          },
+        })
+      : compared;
     if (!promoted.ok) {
       return {
         ok: false,

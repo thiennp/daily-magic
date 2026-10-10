@@ -52,6 +52,18 @@ describe("buildSkillCheckPrompt", () => {
   });
 });
 
+describe("buildSkillCheckPrompt declined changes", () => {
+  it("lists changes the owner declined, and nothing when there are none", () => {
+    expect(buildSkillCheckPrompt(check)).not.toContain("declined");
+    const prompt = buildSkillCheckPrompt({
+      ...check,
+      declinedNotes: ["add a migrate step"],
+    });
+    expect(prompt).toContain("do not propose them again");
+    expect(prompt).toContain("add a migrate step");
+  });
+});
+
 describe("judgeSkillCheck", () => {
   it("returns fine without writing a new version", async () => {
     const calls: string[] = [];
