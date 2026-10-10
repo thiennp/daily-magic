@@ -3,7 +3,7 @@ import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitch
 import {
   isGenericMacDeviceLabel,
   resolveMacDeviceDisplayName,
-} from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
+} from "@/features/agent-witch/utils/resolveSingleMacDeviceDisplayName";
 
 const resolveSavedMacDeviceDisplayName = (input: {
   readonly displayName?: string | null;
