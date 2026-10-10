@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import SectionIcon from "@/features/projects/members/AwcProjectMembersSectionCard";
 import AwcHumanPeopleSectionBody from "@/features/projects/access/humanInvites/AwcHumanPeopleSectionBody";
-import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
+import { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 import { countActiveAssistantMembers } from "@/features/projects/access/humanInvites/utils/public-api/presentation";
 import type { AccessMemberForHumanFilter } from "@/features/projects/access/humanInvites/utils/public-api/types";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";

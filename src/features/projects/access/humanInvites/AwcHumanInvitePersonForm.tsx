@@ -8,8 +8,8 @@ import AwcHumanInviteSentView from "@/features/projects/access/humanInvites/AwcH
 import AwcHumanInvitePersonFormBody from "@/features/projects/access/humanInvites/AwcHumanInvitePersonFormBody";
 import AwcHumanInvitePersonPanelActions from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanelActions";
 import AwcHumanInvitePersonRolePicker from "@/features/projects/access/humanInvites/AwcHumanInvitePersonRolePicker";
-import { useHumanInviteCreateSubmit } from "@/features/projects/access/humanInvites/hooks/useHumanInviteCreateSubmit";
-import { useHumanInviteSendForm } from "@/features/projects/access/humanInvites/hooks/useHumanInviteSendForm";
+import { useHumanInviteCreateSubmit } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
+import { useHumanInviteSendForm } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 import AwcHumanInvitePersonTabSeg, {
   type InvitePersonTab,
 } from "@/features/projects/access/humanInvites/AwcHumanInvitePersonTabSeg";

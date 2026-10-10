@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useAutoSkills } from "@/features/project-auto-skills/public-api/presentation";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvites/hooks/useHumanInviteWaitingCount";
+import { useHumanInviteWaitingCount } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 import {
   countRailMembers,
   countRailWaiting,

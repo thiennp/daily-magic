@@ -2,7 +2,7 @@
 
 import AwcHumanInviteAwaitingApprovalView from "@/features/projects/access/humanInvites/AwcHumanInviteAwaitingApprovalView";
 import AwcHumanInviteAcceptView from "@/features/projects/access/humanInvites/AwcHumanInviteAcceptView";
-import { useHumanInviteAcceptFlow } from "@/features/projects/access/humanInvites/hooks/useHumanInviteAcceptFlow";
+import { useHumanInviteAcceptFlow } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 import type { AwcHumanInviteAcceptPageProps } from "@/features/projects/access/humanInvites/types/awcHumanInviteAcceptPageProps.type";
 
 export type { AwcHumanInviteAcceptPageProps } from "@/features/projects/access/humanInvites/types/awcHumanInviteAcceptPageProps.type";

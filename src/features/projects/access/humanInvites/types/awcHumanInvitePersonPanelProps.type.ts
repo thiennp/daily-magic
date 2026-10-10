@@ -1,4 +1,4 @@
-import type { SendHumanInviteEmailsInput } from "@/features/projects/access/humanInvites/hooks/useHumanInviteEmailActions";
+import type { SendHumanInviteEmailsInput } from "@/features/projects/access/humanInvites/hooks/public-api/types";
 import type {
   CreateHumanInviteBody,
   CreateHumanInviteResponse,

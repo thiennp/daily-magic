@@ -3,7 +3,7 @@
 import AwcHumanInvitePersonPanel from "@/features/projects/access/humanInvites/AwcHumanInvitePersonPanel";
 import AwcHumanInviteUndoToast from "@/features/projects/access/humanInvites/AwcHumanInviteUndoToast";
 import AwcHumanPeopleMembersList from "@/features/projects/access/humanInvites/AwcHumanPeopleMembersList";
-import type { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/useHumanPeopleInvites";
+import type { useHumanPeopleInvites } from "@/features/projects/access/humanInvites/hooks/public-api/presentation";
 
 type PeopleModel = ReturnType<typeof useHumanPeopleInvites>;
 
