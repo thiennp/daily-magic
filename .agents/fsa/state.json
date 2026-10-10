@@ -4,7 +4,8 @@
     "src/features/projects/invitations",
     "src/features/setup",
     "src/features/marketing/types",
-    "src/features/shell/utils"
+    "src/features/shell/utils",
+    "src/features/workflows/utils"
   ],
   "blocked": {},
   "rounds": [
@@ -32,6 +33,11 @@
       "unit": "src/features/shell/utils",
       "sha": "c03052efd00d0768faa465ea038e2a8c131a8edb",
       "at": "2026-10-10T08:49:28.898Z"
+    },
+    {
+      "unit": "src/features/workflows/utils",
+      "sha": "a32c1f5db517e62654fc2c0d6314d3891eda96f4",
+      "at": "2026-10-10T08:50:34.716Z"
     }
   ]
 }

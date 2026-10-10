@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 
 import WorkflowTaskFieldBooleanControl from "@/features/workflows/WorkflowTaskFieldBooleanControl";
 import WorkflowTaskFieldFileInput from "@/features/workflows/WorkflowTaskFieldFileInput";
-import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
+import { workflowFieldInputClassName } from "@/features/workflows/utils/public-api/presentation";
 import { workflowFieldHtmlInputType } from "@/features/workflows/workflowFieldHtmlInputType";
 import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";

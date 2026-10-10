@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 
 import { postWorkflowFieldUpload } from "@/features/workflows/postWorkflowFieldUpload";
 import { useWorkflowUploadExcerptRegistrar } from "@/features/workflows/WorkflowUploadExcerptContext";
-import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
+import { workflowFieldInputClassName } from "@/features/workflows/utils/public-api/presentation";
 import { parseWorkflowFieldUploadRef } from "@/lib/workflows/parseWorkflowFieldUploadRef";
 import { defaultWorkflowFileAccept } from "@/lib/workflows/mimeMatchesWorkflowFileAccept";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
