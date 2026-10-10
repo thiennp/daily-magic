@@ -6,9 +6,7 @@ import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/agentWitchCloudApi";
 
 import { createHttpAutoSkillCloud } from "./autoSkillCloud";
-import { probeSignedInAutoSkillAgent } from "./autoSkillAgent";
-import { probeAutoSkillOllamaModel } from "./autoSkillOllama";
-import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
+import { announceScanStart, prepareScanJudge } from "./prepareScanJudge";
 import type { AutoSkillOutcome } from "./onAutoSkillRunCompleted.types";
 import { reportAutoSkillRunCompleted } from "./reportAutoSkillRunCompleted";
 import {
@@ -90,6 +88,17 @@ export const describeScanProgress = (
   total: number,
 ): string => `Checking ${kind} ${done} of ${total}…`;
 
+/** First strip line of a scan, posted before any AI call. */
+export const describeScanStart = (tasks: number, commits: number): string =>
+  `Starting: ${
+    [
+      tasks === 0 ? null : plural(tasks, "finished task"),
+      commits === 0 ? null : plural(commits, "commit"),
+    ]
+      .filter((part): part is string => part !== null)
+      .join(" and ") || "nothing to check yet"
+  }…`;
+
 export const describeScan = (
   summary: AutoSkillScanSummary,
   branch: string | null = null,
@@ -132,6 +141,25 @@ export const scanProjectTasksForAutoSkills = async (input: {
   } catch {
     tasks = [];
   }
+  const history =
+    input.folderPath === undefined
+      ? null
+      : await readMainBranchCommits(
+          input.folderPath,
+          clampScanCommits(input.commits),
+        ).catch(() => null);
+  const allCommits = [...(history?.commits ?? [])].reverse();
+  const prepared = await prepareScanJudge(
+    input.cloudApi,
+    input.projectId,
+    tasks[tasks.length - 1]?.writerAgent ?? null,
+  );
+  await announceScanStart(
+    input.cloudApi,
+    input.projectId,
+    prepared,
+    describeScanStart(tasks.length, allCommits.length),
+  );
   let stopped = false;
   for (const [index, task] of tasks.entries()) {
     const outcome = await reportAutoSkillRunCompleted({
@@ -147,6 +175,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
           (task.promptBody ?? "").split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
       },
       layout: input.layout,
+      ...(prepared !== null ? { availability: prepared.availability } : {}),
       statusNote: describeScanProgress("task", index + 1, tasks.length),
       evaluateEachRun: true,
       ...(input.folderPath !== undefined
@@ -160,15 +189,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       break;
     }
   }
-  const history =
-    stopped || input.folderPath === undefined
-      ? null
-      : await readMainBranchCommits(
-          input.folderPath,
-          clampScanCommits(input.commits),
-        ).catch(() => null);
-  // Oldest first so a repeat is noticed on its second occurrence, as in a live run.
-  const commitsToScan = [...(history?.commits ?? [])].reverse();
+  const commitsToScan = stopped ? [] : allCommits;
   for (const [index, commit] of commitsToScan.entries()) {
     const outcome = await reportAutoSkillRunCompleted({
       cloudApi: input.cloudApi,
@@ -183,6 +204,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
       },
       layout: input.layout,
       folderPath: input.folderPath ?? "",
+      ...(prepared !== null ? { availability: prepared.availability } : {}),
       evaluateEachRun: true,
       statusNote: describeScanProgress(
         "commit",
@@ -197,33 +219,20 @@ export const scanProjectTasksForAutoSkills = async (input: {
   }
   const summary: AutoSkillScanSummary = {
     scanned: tasks.length,
-    commitsScanned: history?.commits.length ?? 0,
+    commitsScanned: commitsToScan.length,
     asked: outcomes.asked ?? 0,
     outcomes,
   };
-  try {
-    const cloud = createHttpAutoSkillCloud(input.cloudApi);
-    const settings = await cloud.getSettings(input.projectId);
-    const writer = tasks[tasks.length - 1]?.writerAgent ?? null;
-    const choice = selectAutoSkillJudge(settings.judgePref, {
-      ollamaModel: await probeAutoSkillOllamaModel(),
-      agentWriter: await probeSignedInAutoSkillAgent(
-        writer,
-        undefined,
-        settings.judgeAgent ?? null,
-      ),
-      botName: null,
-    });
-    await cloud.postStatus(input.projectId, {
-      judgeKind: choice.ok ? choice.kind : null,
-      judgeLabel: choice.ok ? choice.label : null,
-      pausedReason: choice.ok ? null : choice.pausedReason,
+  const choice = prepared?.choice ?? null;
+  await createHttpAutoSkillCloud(input.cloudApi)
+    .postStatus(input.projectId, {
+      judgeKind: choice?.ok ? choice.kind : null,
+      judgeLabel: choice?.ok ? choice.label : null,
+      pausedReason: choice !== null && !choice.ok ? choice.pausedReason : null,
       note: describeScan(summary, history?.branch ?? null),
       gitCommits: history?.total ?? null,
-      gitScanned: history?.commits.length ?? null,
-    });
-  } catch {
-    // the strip keeps its previous status line
-  }
+      gitScanned: commitsToScan.length,
+    })
+    .catch(() => undefined); // the strip keeps its previous status line
   return summary;
 };

@@ -28,6 +28,14 @@ export const buildAutoSkillQuestionCopy = (
       showPrompt: false,
     };
   }
+  if (suggestion.occurrences <= 1) {
+    return {
+      intro:
+        "Found in one past task or commit that reads like a reusable procedure.",
+      neverLabel: "Never for this task",
+      showPrompt: true,
+    };
+  }
   const prompts = suggestion.distinctPrompts;
   return {
     intro:

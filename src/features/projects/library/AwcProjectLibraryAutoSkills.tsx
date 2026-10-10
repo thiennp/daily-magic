@@ -11,6 +11,7 @@ import AwcAutoSkillsDeeperScan from "@/features/projects/library/AwcAutoSkillsDe
 import AwcAutoSkillsHeader from "@/features/projects/library/AwcAutoSkillsHeader";
 import AwcAutoSkillsStatusLine from "@/features/projects/library/AwcAutoSkillsStatusLine";
 import AwcAutoSkillsJudgePicker from "@/features/projects/library/AwcAutoSkillsJudgePicker";
+import { visibleAutoSkillsNote } from "@/features/projects/library/utils/visibleAutoSkillsNote";
 import {
   autoSkillsDetailParts,
   formatAutoSkillsStatus,
@@ -58,7 +59,12 @@ export default function AwcProjectLibraryAutoSkills({
           <AwcAutoSkillsStatusLine
             status={status}
             detail={autoSkillsDetailParts(overview, nowMs).join(" · ")}
-            note={overview.statusNote}
+            note={visibleAutoSkillsNote({
+              note: overview.statusNote,
+              lastCheckedAt: overview.lastCheckedAt,
+              scanning: auto.scanning,
+              nowMs,
+            })}
           />
           <AwcAutoSkillsJudgePicker
             value={overview.judgePref}

@@ -88,7 +88,7 @@ export async function POST(
     clusterId,
     title: str(s.title, 120) ?? draftName,
     prompt: str(s.prompt, 1_000) ?? "",
-    occurrences: Math.max(2, Number(s.occurrences) || 2),
+    occurrences: Math.max(1, Number(s.occurrences) || 2),
     moduleLabel: str(s.moduleLabel, 160),
     distinctPrompts: Number.isFinite(Number(s.distinctPrompts))
       ? Math.max(1, Number(s.distinctPrompts))

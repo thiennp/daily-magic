@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS module_occurrence (
   PRIMARY KEY (module_id, run_id, position));
 CREATE INDEX IF NOT EXISTS module_occurrence_cluster
   ON module_occurrence (cluster_id);
+CREATE TABLE IF NOT EXISTS autoskill_run_judged (
+  run_id TEXT PRIMARY KEY, outcome TEXT NOT NULL, judged_at TEXT NOT NULL);
 `;
 
 export const ensureAutoSkillModuleSchema = (db: AutoSkillModuleDb): void => {

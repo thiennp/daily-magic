@@ -7,7 +7,10 @@ import {
 } from "../../../knowledge/public-api/infrastructure";
 import type { AgentWitchCloudApiConfig } from "../../../projects/internal/core/agentWitchCloudApi";
 
-import type { AutoSkillRunRecord } from "./autoSkill.types";
+import type {
+  AutoSkillAvailability,
+  AutoSkillRunRecord,
+} from "./autoSkill.types";
 import {
   createAgentAutoSkillCompleter,
   probeSignedInAutoSkillAgent,
@@ -45,6 +48,8 @@ export const reportAutoSkillRunCompleted = async (input: {
   readonly statusNote?: string;
   /** Manual scan: judge this run alone, without waiting for a second occurrence. */
   readonly evaluateEachRun?: boolean;
+  /** Judge availability probed once by the caller (a scan), so each run skips its own probe. */
+  readonly availability?: AutoSkillAvailability;
 }): Promise<AutoSkillOutcome> =>
   onAutoSkillRunCompleted(
     {
@@ -84,15 +89,16 @@ export const reportAutoSkillRunCompleted = async (input: {
             readLocalProjectHistoryState(projectId)?.state,
           ),
         ),
-      probeAvailability: async (writerOfRun, judgeAgent) => ({
-        ollamaModel: await probeAutoSkillOllamaModel(),
-        agentWriter: await probeSignedInAutoSkillAgent(
-          writerOfRun,
-          undefined,
-          judgeAgent,
-        ),
-        botName: null,
-      }),
+      probeAvailability: async (writerOfRun, judgeAgent) =>
+        input.availability ?? {
+          ollamaModel: await probeAutoSkillOllamaModel(),
+          agentWriter: await probeSignedInAutoSkillAgent(
+            writerOfRun,
+            undefined,
+            judgeAgent,
+          ),
+          botName: null,
+        },
       makeCompleter: (kind, availability) => {
         if (kind === "ollama" && availability.ollamaModel !== null) {
           return createOllamaAutoSkillCompleter(availability.ollamaModel);

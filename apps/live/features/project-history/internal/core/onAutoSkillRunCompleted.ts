@@ -1,7 +1,6 @@
 import type { AutoSkillRunRecord } from "./autoSkill.types";
 import { askForRepeatedModules } from "./autoSkillModuleAsk";
-import { refreshTouchedClusters } from "./autoSkillModulePipeline";
-import { listRunClusterIds } from "./autoSkillModuleClusterDb";
+import { evaluateRunAlone } from "./evaluateRunAlone";
 import { feedRun } from "./feedAutoSkillRun";
 import { selectAutoSkillJudge } from "./autoSkillSelectJudge";
 import { appendAutoSkillRun } from "./autoSkillStore";
@@ -31,7 +30,7 @@ export const onAutoSkillRunCompleted = async (
     readonly agentOutput?: string;
     /** Shown on the strip instead of the judge note (a scan's "Checking 2 of 5"). */
     readonly statusNote?: string;
-    /** Manual scan: the AI judges this run alone, no second occurrence needed. */
+    /** Manual scan: one AI call judges this run alone, no second occurrence needed. */
     readonly evaluateEachRun?: boolean;
   },
   deps: OnAutoSkillRunCompletedDeps,
@@ -65,42 +64,49 @@ export const onAutoSkillRunCompleted = async (
       deps.saveState(projectId, state);
       return "store_unavailable";
     }
-    const processed = hasProcessedAutoSkillRun(db, run.runId);
-    if (processed && input.evaluateEachRun !== true) {
+    const completer = deps.makeCompleter(choice.kind, availability);
+    if (input.evaluateEachRun === true) {
+      deps.saveState(projectId, state);
+      return evaluateRunAlone({
+        projectId,
+        run,
+        db,
+        cloud: deps.cloud,
+        completer,
+        judgeLabel: choice.label,
+        knownClusterIds: new Set([
+          ...settings.pendingClusterIds,
+          ...settings.savedClusterIds,
+          ...settings.neverClusterIds,
+        ]),
+        ...(input.folderPath !== undefined
+          ? { folderPath: input.folderPath }
+          : {}),
+      });
+    }
+    if (hasProcessedAutoSkillRun(db, run.runId)) {
       return "no_repeat";
     }
-    const completer = deps.makeCompleter(choice.kind, availability);
-    const answers = {
-      saved: new Set(settings.savedClusterIds),
-      never: new Set(settings.neverClusterIds),
-    };
-    // A run seen by an earlier scan already has its clusters; only re-ask them.
-    const fed = processed
-      ? {
-          touched: refreshTouchedClusters(
-            db,
-            listRunClusterIds(db, run.runId),
-            answers,
-          ),
-          judgeFailed: false,
-        }
-      : await feedRun({
-          run,
-          agentOutput: input.agentOutput,
-          db,
-          projectId,
-          completer,
-          availability,
-          deps,
-          answers,
-          verdictCache: state.verdictCache,
-          onVerdict: (key, v) => {
-            state = {
-              ...state,
-              verdictCache: { ...state.verdictCache, [key]: v },
-            };
-          },
-        });
+    const fed = await feedRun({
+      run,
+      agentOutput: input.agentOutput,
+      db,
+      projectId,
+      completer,
+      availability,
+      deps,
+      answers: {
+        saved: new Set(settings.savedClusterIds),
+        never: new Set(settings.neverClusterIds),
+      },
+      verdictCache: state.verdictCache,
+      onVerdict: (key, v) => {
+        state = {
+          ...state,
+          verdictCache: { ...state.verdictCache, [key]: v },
+        };
+      },
+    });
     const result = await askForRepeatedModules({
       projectId,
       run,
@@ -111,7 +117,6 @@ export const onAutoSkillRunCompleted = async (
       cloud: deps.cloud,
       completer,
       judgeLabel: choice.label,
-      ...(input.evaluateEachRun === true ? { minOccurrences: 1 } : {}),
       ...(input.folderPath !== undefined
         ? { folderPath: input.folderPath }
         : {}),

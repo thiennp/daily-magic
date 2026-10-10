@@ -20,12 +20,12 @@ import {
 } from "./mergeOrSkipProjectHistorySkillgenDraft";
 import { extractProjectHistorySkillgenStepLines } from "./validateProjectHistorySkillgenDraft";
 
-type ExistingSkills = {
+export type ExistingSkills = {
   readonly drafts: readonly ProjectHistorySkillgenDraftFingerprint[];
   readonly published: readonly ProjectHistorySkillgenDraftFingerprint[];
 };
 
-const loadExistingSkills = (projectId: string): ExistingSkills => {
+export const loadExistingSkills = (projectId: string): ExistingSkills => {
   try {
     return {
       drafts: listProjectHistorySkillgenDraftFingerprints(projectId),
@@ -59,8 +59,6 @@ export const askForRepeatedModules = async (input: {
   readonly judgeLabel: string;
   /** Project folder: scripts are replayed in a temp copy of it. */
   readonly folderPath?: string;
-  /** Distinct runs a cluster needs before it asks; 1 = judge each run alone. */
-  readonly minOccurrences?: number;
   /** Skills already in the project; read from disk when omitted. */
   readonly existing?: ExistingSkills;
 }): Promise<ModuleAskResult> => {
@@ -74,9 +72,6 @@ export const askForRepeatedModules = async (input: {
         decideModuleCluster({
           cluster,
           cloudPending: input.cloudPending.has(cluster.id),
-          ...(input.minOccurrences !== undefined
-            ? { minOccurrences: input.minOccurrences }
-            : {}),
         }).action === "ask",
     ),
   );

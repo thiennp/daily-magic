@@ -91,16 +91,3 @@ export const listClusterOccurrences = (
       )
       .all(clusterId, limit) as Record<string, unknown>[]
   ).map((r) => ({ runId: String(r.run_id), text: String(r.canonical) }));
-
-/** Clusters a run already fed (a rescan re-asks them without extracting again). */
-export const listRunClusterIds = (
-  db: AutoSkillModuleDb,
-  runId: string,
-): string[] =>
-  (
-    db
-      .prepare(
-        "SELECT DISTINCT cluster_id FROM module_occurrence WHERE run_id = ?",
-      )
-      .all(runId) as Record<string, unknown>[]
-  ).map((r) => String(r.cluster_id));

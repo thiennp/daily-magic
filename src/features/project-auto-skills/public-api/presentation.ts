@@ -5,3 +5,4 @@ export type {
   AutoSkillQuestionRow,
   AutoSkillQuestionsState,
 } from "@/features/project-auto-skills/internal/presentation/useAutoSkillQuestions";
+export { isAutoSkillScanProgressNote } from "@/features/project-auto-skills/internal/core/isAutoSkillScanProgressNote";
