@@ -7,7 +7,7 @@ import AwcProjectTasksPanelWithRecords from "@/features/projects/tasks/AwcProjec
 import AwcProjectOverviewPanel from "@/features/projects/overview/AwcProjectOverviewPanel";
 import { AwcProjectPitfallsPanel } from "@/features/projects/pitfalls/public-api/presentation";
 import type { AwcProjectPitfallsState } from "@/features/projects/pitfalls/public-api/types";
-import AwcProjectReportsPanel from "@/features/projects/reports/AwcProjectReportsPanel";
+import { AwcProjectReportsPanel } from "@/features/projects/reports/public-api/presentation";
 import AwcProjectResourcesPanel from "@/features/projects/resources/AwcProjectResourcesPanel";
 import type {
   ProjectPageNavTarget,

@@ -4,7 +4,7 @@ import { formatAgentLiveTerminalMarkersForDisplay } from "@/features/agent/utils
 import { formatAgentRunPartialOutputForDisplay } from "@/features/agent/utils/formatAgentRunPartialOutputForDisplay";
 import { resolveAgentLiveProgressUpdatesFromSources } from "@/features/agent/utils/resolveAgentLiveProgressUpdatesFromSources";
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
-import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/utils/stripAgentRunReportMarkerFragments";
+import { stripAgentRunReportMarkerFragments } from "@/features/projects/reports/public-api/types";
 
 /** Exact strings from Thien's ask modal screenshot (qa/ask-context/thien-2126.png). */
 const SCREENSHOT_JUNK = [
