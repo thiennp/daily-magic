@@ -10,7 +10,7 @@ import AwcProjectSettingsTasksChatRow from "@/features/projects/settings/AwcProj
 import AwcProjectSettingsLeaveZone from "@/features/projects/settings/AwcProjectSettingsLeaveZone";
 import AwcProjectSettingsDefinitionOfDone from "@/features/projects/settings/AwcProjectSettingsDefinitionOfDone";
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
-import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
+import { AwcProjectConnectionsSection } from "@/features/projects/settings/connections/public-api/presentation";
 import { AwcProjectSettingsPendingRunApprovalsSection } from "@/features/projects/settings/runApprovals/public-api/presentation";
 import { AwcProjectSettingsMemberPermissionsRow } from "@/features/projects/settings/memberPermissions/public-api/presentation";
 import { AwcProjectSettingsRunsWithoutApprovalRow } from "@/features/projects/settings/runsWithoutApproval/public-api/presentation";
