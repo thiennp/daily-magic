@@ -35,3 +35,5 @@ Public API (`icons`): outside code imports `HarnessWriterAgentMark` from `@/feat
 Public API (`hooks/types`): outside code imports `UseWsTestTaskComposerResult` from `@/features/agent/hooks/types/public-api/types`.
 
 Public API (`hooks/utils`): outside code imports `fetchUserProjectsForLoader` from `@/features/agent/hooks/utils/public-api/presentation`.
+
+`constants/public-api/types.ts` is the public API of the agent constants unit (send-task query params, storage keys).

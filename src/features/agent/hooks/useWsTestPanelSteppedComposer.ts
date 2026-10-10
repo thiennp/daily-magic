@@ -10,7 +10,7 @@ import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/S
 import {
   SEND_TASK_CONTINUE_SESSION_QUERY_PARAM,
   SEND_TASK_CUSTOM_TASK_QUERY_PARAM,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export const useWsTestPanelSteppedComposer = (input: {

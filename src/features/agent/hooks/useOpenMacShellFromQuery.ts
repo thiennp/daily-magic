@@ -7,7 +7,7 @@ import {
   SEND_TASK_DEVICE_ID_QUERY_PARAM,
   SEND_TASK_OPEN_SHELL_QUERY_PARAM,
   SEND_TASK_OPEN_SHELL_QUERY_VALUE,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 
 export const useOpenMacShellFromQuery = (input: {

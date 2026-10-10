@@ -7,7 +7,7 @@ import {
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
   SEND_TASK_WORKFLOW_DRAFT_QUERY_PARAM,
   SEND_TASK_WRITER_AGENT_QUERY_PARAM,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 import { buildNavConsolidationNewTaskHref } from "@/lib/shell/buildNavConsolidationNewTaskHref";
 import { NAV_CONSOLIDATION_PROJECT_QUERY_PARAM } from "@/lib/shell/navConsolidationIntent.constant";
 
@@ -29,9 +29,7 @@ const readProjectId = (params: URLSearchParams): string | null => {
   if (fromComposer !== undefined && fromComposer.length > 0) {
     return fromComposer;
   }
-  const fromIntent = params
-    .get(NAV_CONSOLIDATION_PROJECT_QUERY_PARAM)
-    ?.trim();
+  const fromIntent = params.get(NAV_CONSOLIDATION_PROJECT_QUERY_PARAM)?.trim();
   if (fromIntent !== undefined && fromIntent.length > 0) {
     return fromIntent;
   }

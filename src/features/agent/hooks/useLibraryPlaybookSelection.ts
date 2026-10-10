@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import {
   SEND_TASK_WORKFLOW_DRAFT_QUERY_PARAM,
   SEND_TASK_WORKFLOW_DRAFT_QUERY_VALUE,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import { readWorkflowCreateDraftPlaybook } from "@/features/workflows/readWorkflowCreateDraftPlaybook";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";

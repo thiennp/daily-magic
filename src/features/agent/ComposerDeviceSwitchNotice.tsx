@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/public-api/types";
 import SendReadinessWriterNotice from "@/features/agent/send-readiness/SendReadinessWriterNotice";
 import { resolveDeepLinkDeviceSwitchNotice } from "@/features/agent/utils/resolveDeepLinkDeviceSwitchNotice";
 

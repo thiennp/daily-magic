@@ -1,4 +1,4 @@
-import { PREFERRED_MAC_DEVICE_STORAGE_KEY } from "@/features/agent/constants/preferredMacDeviceStorage.constant";
+import { PREFERRED_MAC_DEVICE_STORAGE_KEY } from "@/features/agent/constants/public-api/types";
 
 export const readPreferredMacDeviceId = (): string => {
   if (typeof window === "undefined") {

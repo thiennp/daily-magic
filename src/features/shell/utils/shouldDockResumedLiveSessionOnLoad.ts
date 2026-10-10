@@ -3,7 +3,7 @@ import {
   SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM,
   SEND_TASK_RESUME_LIVE_SESSION_QUERY_VALUE,
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 
 /** A page load on `?sendTask=1&sourceRunId=…&resumeLive=1` is a reload of a live run. */
 export const shouldDockResumedLiveSessionOnLoad = (search: string): boolean => {

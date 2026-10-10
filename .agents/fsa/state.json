@@ -21,7 +21,8 @@
     "src/features/projects/computerHistory",
     "src/features/feedback",
     "src/features/projects/bots",
-    "src/features/agent-access"
+    "src/features/agent-access",
+    "src/features/agent/constants"
   ],
   "blocked": {},
   "rounds": [
@@ -134,6 +135,11 @@
       "unit": "src/features/agent-access",
       "sha": "b6c229283edc7256ae5834035a66ebed92c52de6",
       "at": "2026-10-10T09:15:34.018Z"
+    },
+    {
+      "unit": "src/features/agent/constants",
+      "sha": "37281b2dd5a5ce1e9e4a748b25489454aa5230d8",
+      "at": "2026-10-10T09:16:37.141Z"
     }
   ]
 }

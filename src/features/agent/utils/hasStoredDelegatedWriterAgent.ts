@@ -1,4 +1,4 @@
-import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/delegatedWriterAgentStorage.constant";
+import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/public-api/types";
 
 export const hasStoredDelegatedWriterAgent = (): boolean => {
   if (typeof window === "undefined") {

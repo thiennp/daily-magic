@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 
-import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/delegatedWriterAgentStorage.constant";
+import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/public-api/types";
 import { hasStoredDelegatedWriterAgent } from "@/features/agent/utils/hasStoredDelegatedWriterAgent";
 import { mockBrowserLocalStorage } from "@/test/mockBrowserLocalStorage";
 

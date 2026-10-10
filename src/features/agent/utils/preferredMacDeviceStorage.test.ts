@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 
-import { PREFERRED_MAC_DEVICE_STORAGE_KEY } from "@/features/agent/constants/preferredMacDeviceStorage.constant";
+import { PREFERRED_MAC_DEVICE_STORAGE_KEY } from "@/features/agent/constants/public-api/types";
 import {
   hasRememberedMacDeviceInList,
   readPreferredMacDeviceId,

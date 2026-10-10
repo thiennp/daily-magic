@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import {
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
   SEND_TASK_WRITER_AGENT_QUERY_PARAM,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 import { resolveSendTaskLinkWriterChoice } from "@/features/agent/utils/resolveSendTaskLinkWriterAgent";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

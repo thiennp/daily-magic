@@ -8,7 +8,7 @@ import {
   hasAnyWriterSendReadyMac,
   pickDefaultMacDeviceId,
 } from "@/features/agent-witch/online-wake";
-import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/public-api/types";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import {
   readPreferredMacDeviceId,

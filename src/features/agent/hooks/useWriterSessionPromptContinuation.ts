@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
-import { SEND_TASK_CONTINUE_SESSION_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { SEND_TASK_CONTINUE_SESSION_QUERY_PARAM } from "@/features/agent/constants/public-api/types";
 import { resolveIsWriterSessionContinuation } from "@/features/agent/utils/resolveIsWriterSessionContinuation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

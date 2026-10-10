@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/delegatedWriterAgentStorage.constant";
+import { DELEGATED_WRITER_AGENT_STORAGE_KEY } from "@/features/agent/constants/public-api/types";
 import { hasStoredDelegatedWriterAgent } from "@/features/agent/utils/hasStoredDelegatedWriterAgent";
 import { readDelegatedWriterAgentFromStorage } from "@/features/agent/utils/readDelegatedWriterAgentFromStorage";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

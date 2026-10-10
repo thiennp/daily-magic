@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-import { SEND_TASK_MODAL_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { SEND_TASK_MODAL_QUERY_PARAM } from "@/features/agent/constants/public-api/types";
 import { resolveSessionErrorNavigationKey } from "@/features/agent/utils/resolveSessionErrorNavigationKey";
 
 /**

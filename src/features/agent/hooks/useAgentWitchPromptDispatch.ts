@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 import {
   SEND_TASK_CONTINUE_SESSION_QUERY_PARAM,
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
+} from "@/features/agent/constants/public-api/types";
 
 import { buildDemoWriterPromptAck } from "@/features/agent/utils/buildDemoWriterPromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
