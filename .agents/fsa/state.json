@@ -104,7 +104,8 @@
     "src/features/projects/access/approvalCard": "outside test AwcProjectAccessPendingList.df036.render.test.ts imports test helper AwcPendingApprovalCard.fixtures",
     "src/features/projects/access/hooks": "outside importers need test helpers (reactHookRunner.testUtils, createdInviteBanner.testUtils) and vi.mock/source-read of private hook files",
     "src/features/projects/hooks": "importer AwcProjectNameEditor.tsx is over the 100-line limit and prettier rewrap of the repointed import grows it by 3 lines (ratchet fails)",
-    "src/features/projects/tasks": "importer AwcProjectMessengerSection.tsx grows past 100-line ratchet on prettier rewrap"
+    "src/features/projects/tasks": "importer AwcProjectMessengerSection.tsx grows past 100-line ratchet on prettier rewrap",
+    "src/features/home#root": "outside importer AwcProjectsPanel.defaultRender.test.ts needs test helper homeProjectsPanelRenderTestSetup (not exportable)"
   },
   "rounds": [
     {
