@@ -43,10 +43,7 @@ export { canWakeMacDeviceFromBrowser } from "./canWakeMacDeviceFromBrowser";
 export { default as MacDeviceWakeModal } from "./MacDeviceWakeModal";
 export { default as MacDeviceOfflineWakeHint } from "./MacDeviceOfflineWakeHint";
 
-export {
-  requestAgentWitchDeviceRestart,
-  isAgentWitchDeviceRestartRequested,
-  acknowledgeAgentWitchDeviceRestart,
-} from "./agentWitchDeviceRestartRequest";
+// The DB-backed restart helpers (agentWitchDeviceRestartRequest) are server-only and
+// live in public-api/infrastructure: exporting them here pulls `pg` into client bundles.
 
 export { requestLocalAgentWitchRestartFromWakeServer } from "./requestLocalAgentWitchRestartFromWakeServer";
