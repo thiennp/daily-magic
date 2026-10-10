@@ -34,7 +34,8 @@
     "src/features/download",
     "src/features/admin/types",
     "src/features/shell/v5",
-    "src/features/projects/knowledge-impact"
+    "src/features/projects/knowledge-impact",
+    "src/features/projects/repoUrls"
   ],
   "blocked": {},
   "rounds": [
@@ -212,6 +213,11 @@
       "unit": "src/features/projects/knowledge-impact",
       "sha": "a233acfbd5eb54d87fa4940011f9dc76a405635f",
       "at": "2026-10-10T09:30:04.648Z"
+    },
+    {
+      "unit": "src/features/projects/repoUrls",
+      "sha": "2a5a6cd76d83c44b13b0ecef2503a4017d2f2f47",
+      "at": "2026-10-10T09:31:16.092Z"
     }
   ]
 }

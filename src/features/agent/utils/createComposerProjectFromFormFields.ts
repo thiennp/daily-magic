@@ -1,8 +1,6 @@
 import { createUserProjectFromComposer } from "@/features/agent/utils/createUserProjectFromComposer";
-import {
-  buildRepoUrlsPayload,
-  type AwcProjectRepoUrlsFieldsValue,
-} from "@/features/projects/repoUrls/AwcProjectRepoUrlsFields";
+import { buildRepoUrlsPayload } from "@/features/projects/repoUrls/public-api/presentation";
+import type { AwcProjectRepoUrlsFieldsValue } from "@/features/projects/repoUrls/public-api/types";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import {
   validateDefaultBranch,

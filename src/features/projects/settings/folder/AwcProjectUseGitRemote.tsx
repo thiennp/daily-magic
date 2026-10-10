@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { mutateProjectRepoUrls } from "@/features/projects/repoUrls/mutateProjectRepoUrls";
+import { mutateProjectRepoUrls } from "@/features/projects/repoUrls/public-api/presentation";
 import { formatGitRemote } from "@/features/projects/settings/folder/formatGitRemote";
 import type { ProjectFolderStatusResult } from "@/features/projects/settings/folder/projectFolderBridge";
 import { AWC_TASKS_SECONDARY_BUTTON_CLASS } from "@/features/projects/tasks/awcProjectTasksChrome.constant";

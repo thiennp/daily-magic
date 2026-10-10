@@ -10,7 +10,7 @@ import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
 import AwcProjectPitfallsSection from "@/features/projects/pitfalls/AwcProjectPitfallsSection";
-import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
+import { AwcProjectRepoUrlsSection } from "@/features/projects/repoUrls/public-api/presentation";
 import { AWC_PROJECT_DETAIL_META_LABEL_CLASS } from "@/features/projects/awcProjectDetailSection.constant";
 import {
   shouldShowProjectEditOnMacHelperText,

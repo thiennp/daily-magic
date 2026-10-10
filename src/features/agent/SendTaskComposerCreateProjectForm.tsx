@@ -6,9 +6,8 @@ import { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import SendTaskComposerCreateProjectFields from "@/features/agent/SendTaskComposerCreateProjectFields";
 import { createComposerProjectFromFormFields } from "@/features/agent/utils/createComposerProjectFromFormFields";
-import AwcProjectRepoUrlsFields, {
-  type AwcProjectRepoUrlsFieldsValue,
-} from "@/features/projects/repoUrls/AwcProjectRepoUrlsFields";
+import { AwcProjectRepoUrlsFields } from "@/features/projects/repoUrls/public-api/presentation";
+import type { AwcProjectRepoUrlsFieldsValue } from "@/features/projects/repoUrls/public-api/types";
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
