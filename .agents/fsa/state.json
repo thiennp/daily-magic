@@ -8,7 +8,8 @@
     "src/features/workflows/utils",
     "src/features/home/types",
     "src/features/improvements",
-    "src/features/marketing/components"
+    "src/features/marketing/components",
+    "src/features/projects/access/laneCompare"
   ],
   "blocked": {},
   "rounds": [
@@ -56,6 +57,11 @@
       "unit": "src/features/marketing/components",
       "sha": "f71e8157bc6380bbdb01892b5aad2209131ec1ab",
       "at": "2026-10-10T08:55:36.628Z"
+    },
+    {
+      "unit": "src/features/projects/access/laneCompare",
+      "sha": "cf6739ad5ea06c6879cd9f28e7e6184efae38c78",
+      "at": "2026-10-10T08:57:15.356Z"
     }
   ]
 }

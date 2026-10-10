@@ -3,8 +3,8 @@
 import AwcProjectAccessComputerMemberRow from "@/features/projects/access/AwcProjectAccessComputerMemberRow";
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { AWC_PROJECT_COMPUTER_MEMBER_COPY } from "@/features/projects/access/awcProjectComputerMemberCopy.constant";
-import LaneCompareHelpTrigger from "@/features/projects/access/laneCompare/LaneCompareHelpTrigger";
-import { LANE_COMPARE_COPY } from "@/features/projects/access/laneCompare/laneCompareCopy.constant";
+import { LaneCompareHelpTrigger } from "@/features/projects/access/laneCompare/public-api/presentation";
+import { LANE_COMPARE_COPY } from "@/features/projects/access/laneCompare/public-api/types";
 import type { ComputerAccessMemberFields } from "@/features/projects/access/utils/describeComputerAccessMember";
 
 interface AwcProjectAccessComputerMembersSectionProps {
