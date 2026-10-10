@@ -10,13 +10,13 @@ import {
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { isAgentRunSilentPastStall } from "@/lib/dispatch/isAgentRunSilentPastStall";
-import { shouldRestoreLiveFloaterAfterReload } from "@/features/shell/utils/shouldRestoreLiveFloaterAfterReload";
 import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
 import {
   isPageReloadNavigation,
   shouldDockReloadedLiveSession,
-} from "@/features/shell/utils/shouldDockResumedLiveSessionOnLoad";
-import { shouldDockRestoredLiveFloater } from "@/features/shell/utils/shouldDockRestoredLiveFloater";
+  shouldDockRestoredLiveFloater,
+  shouldRestoreLiveFloaterAfterReload,
+} from "@/features/shell/utils/public-api/presentation";
 
 const readRunStatus = async (runId: string): Promise<string | null> => {
   const cached = getAgentRunLocalCache(runId);
