@@ -15,7 +15,8 @@
     "src/features/agent/icons",
     "src/features/agent/hooks/types",
     "src/features/reports/types",
-    "src/features/projects/navConsolidation"
+    "src/features/projects/navConsolidation",
+    "src/features/projects/settings/memberPermissions"
   ],
   "blocked": {},
   "rounds": [
@@ -98,6 +99,11 @@
       "unit": "src/features/projects/navConsolidation",
       "sha": "e5e5f481a3432f5ee007ec89c4913f497c016ca9",
       "at": "2026-10-10T09:08:40.318Z"
+    },
+    {
+      "unit": "src/features/projects/settings/memberPermissions",
+      "sha": "c62baeac71d6db22e684aadcdc167f802440ebe4",
+      "at": "2026-10-10T09:09:47.098Z"
     }
   ]
 }

@@ -12,7 +12,7 @@ import AwcProjectSettingsDefinitionOfDone from "@/features/projects/settings/Awc
 import AwcProjectSettingsNameSection from "@/features/projects/settings/AwcProjectSettingsNameSection";
 import AwcProjectConnectionsSection from "@/features/projects/settings/connections/AwcProjectConnectionsSection";
 import AwcProjectSettingsPendingRunApprovalsSection from "@/features/projects/settings/runApprovals/AwcProjectSettingsPendingRunApprovalsSection";
-import AwcProjectSettingsMemberPermissionsRow from "@/features/projects/settings/memberPermissions/AwcProjectSettingsMemberPermissionsRow";
+import { AwcProjectSettingsMemberPermissionsRow } from "@/features/projects/settings/memberPermissions/public-api/presentation";
 import AwcProjectSettingsRunsWithoutApprovalRow from "@/features/projects/settings/runsWithoutApproval/AwcProjectSettingsRunsWithoutApprovalRow";
 
 interface AwcProjectDetailSettingsPanelProps {
