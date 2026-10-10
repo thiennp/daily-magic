@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
-import AwcProjectChatDockHead from "@/features/projects/chatDock/AwcProjectChatDockHead";
+import { AwcProjectChatDockHead } from "@/features/projects/chatDock/public-api/presentation";
 import {
   AwcOneWindowDaySeparator,
   AwcOneWindowJumpToNew,

@@ -1,7 +1,9 @@
 "use client";
 
-import AwcProjectChatDock from "@/features/projects/chatDock/AwcProjectChatDock";
-import { useAwcProjectChatSurface } from "@/features/projects/chatDock/useAwcProjectChatSurface";
+import {
+  AwcProjectChatDock,
+  useAwcProjectChatSurface,
+} from "@/features/projects/chatDock/public-api/presentation";
 import AwcProjectDetailBanners from "@/features/projects/AwcProjectDetailBanners";
 import AwcProjectDetailHeader from "@/features/projects/AwcProjectDetailHeader";
 import AwcProjectDetailTabBar from "@/features/projects/AwcProjectDetailTabBar";

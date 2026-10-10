@@ -4,7 +4,7 @@ import {
   type AskBoxSendTarget,
 } from "@/features/projects/askBox/askBoxSendTarget";
 import { PROJECT_ASK_BOX_COPY } from "@/features/projects/askBox/projectAskBoxCopy.constant";
-import { PROJECT_CHAT_DOCK_COPY } from "@/features/projects/chatDock/projectChatDockCopy.constant";
+import { PROJECT_CHAT_DOCK_COPY } from "@/features/projects/chatDock/public-api/types";
 import type { MessengerTaskRefsDraft } from "@/features/projects/messenger/AwcMessengerTaskRefsPanel";
 import type { MessengerTaskDraft } from "@/features/projects/messenger/utils/validateMessengerTaskDraft";
 
@@ -49,7 +49,9 @@ export const resolveAskBoxSend = (
       threadKey: draft.to,
       text,
       needsReply: draft.needsReply,
-      successMessage: draft.needsReply ? copy.sentTo(label) : copy.sentQuiet(label),
+      successMessage: draft.needsReply
+        ? copy.sentTo(label)
+        : copy.sentQuiet(label),
     };
   }
   if (targets.length === 0) return { kind: "error", message: copy.inviteFirst };
