@@ -2386,11 +2386,22 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.commits === "number"
           ? parsed.payload.commits
           : undefined,
+        typeof parsed.payload.folderPath === "string"
+          ? parsed.payload.folderPath
+          : undefined,
       );
     }
   };
 
   const autoSkillScansRunning = new Set<string>();
+
+  /** Folder the cloud has for this computer (added on Resources); used only when it exists here. */
+  const resolveCloudScanFolder = (
+    cloudFolderPath: string | undefined,
+  ): string | null => {
+    const candidate = cloudFolderPath?.trim() ?? "";
+    return candidate.length > 0 && fs.existsSync(candidate) ? candidate : null;
+  };
 
   /** Owner pressed "Scan past tasks": feed this computer's finished tasks through auto skills. */
   const runAutoSkillScan = (
@@ -2398,6 +2409,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     projectId: string,
     docs = false,
     commits?: number,
+    cloudFolderPath?: string,
   ): void => {
     const runConfig = readAgentWitchRunConfig();
     const cloudApi =
@@ -2411,10 +2423,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
     autoSkillScansRunning.add(projectId);
-    const folderPath = resolveLinkedProjectFolderPath(
-      path.dirname(scanConfig.layout.configPath),
-      projectId,
-    );
+    const folderPath =
+      resolveLinkedProjectFolderPath(
+        path.dirname(scanConfig.layout.configPath),
+        projectId,
+      ) ?? resolveCloudScanFolder(cloudFolderPath);
     if (docs) {
       void scanProjectDocsForAutoSkills({
         cloudApi,

@@ -3,6 +3,7 @@ import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { findDeviceProjectFolderPath } from "@/lib/projects/acl/findDeviceProjectFolderPath";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,9 @@ type RouteContext = { params: Promise<{ readonly projectId: string }> };
  * the scan runs there; answers show up as questions on the strip. A body of
  * `{ "docs": true }` scans the project folder's docs instead of past tasks.
  * `{ "commits": n }` sets how many main-branch commits a git folder feeds in
- * (the computer defaults to 100 and caps it).
+ * (the computer defaults to 100 and caps it). Each request carries the
+ * folder this computer registered on Resources, as a fallback for a missing
+ * local link.
  */
 export async function POST(
   request: Request,
@@ -64,12 +67,18 @@ export async function POST(
     );
   }
   for (const agent of agents) {
+    // The folder added on Resources lives in the cloud; the computer's own link file may not have it.
+    const folderPath = await findDeviceProjectFolderPath(
+      projectId,
+      agent.deviceId,
+    );
     agent.send({
       type: AGENT_WITCH_MESSAGE_TYPES.AUTOSKILL_SCAN_REQUEST,
       payload: {
         projectId,
         ...(docs ? { docs: true } : {}),
         ...(commits !== undefined ? { commits } : {}),
+        ...(folderPath !== null ? { folderPath } : {}),
       },
     });
   }
