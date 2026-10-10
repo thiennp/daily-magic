@@ -1,7 +1,7 @@
 "use client";
 
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 
 interface HomeConnectedMacsEmptyStateProps {
   readonly installCommand: string;

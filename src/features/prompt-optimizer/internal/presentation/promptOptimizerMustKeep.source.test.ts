@@ -9,7 +9,7 @@ import PromptSdlcPage from "@/features/prompt-optimizer/internal/presentation/Pr
 import { PROMPT_SDLC_AI_PATH_COPY } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAiPathCopy.constant";
 import { PROMPT_SDLC_AWL_PAGE_HREF } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
 import { canUseThisPromptSdlcOutcome } from "@/features/prompt-optimizer/internal/presentation/promptSdlcOutcomeLabels.constant";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 
 const read = (...parts: string[]): string =>

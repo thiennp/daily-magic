@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 
 interface ComputersDownloadLinkProps {
   readonly className?: string;
@@ -19,10 +19,7 @@ export default function ComputersDownloadLink({
   className,
 }: ComputersDownloadLinkProps) {
   return (
-    <Link
-      href="/download"
-      className={className ?? APP_SURFACE_TEXT_LINK_CLASS}
-    >
+    <Link href="/download" className={className ?? APP_SURFACE_TEXT_LINK_CLASS}>
       {APP_SHELL_COMPUTERS_COPY.download}
     </Link>
   );

@@ -1,4 +1,4 @@
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 
 /**
  * Locked v5 EN (button + modal title): zero computers → "Connect this

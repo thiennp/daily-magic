@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import ComputersDownloadLink from "@/features/home/ComputersDownloadLink";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 
 describe("ComputersDownloadLink", () => {
   it("HARD: links to /download with design Download AgentWitch label", () => {

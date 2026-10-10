@@ -4,7 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 
 const read = (relativePath: string): string =>

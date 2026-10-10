@@ -7,8 +7,8 @@ import UserDropdown from "@/components/header/UserDropdown";
 import { clearProjectSyncOnSignOut } from "@/features/projects/sync/clearProjectSyncOnSignOut";
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import AppShellMobileNavMenu from "@/features/shell/AppShellMobileNavMenu";
-import AppShellBrand from "@/features/shell/v5/AppShellBrand";
-import { APP_SHELL_V5_TOPBAR_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
+import { AppShellBrand } from "@/features/shell/v5/public-api/presentation";
+import { APP_SHELL_V5_TOPBAR_CLASS } from "@/features/shell/v5/public-api/types";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface AppShellHeaderProps {

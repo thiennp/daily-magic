@@ -13,8 +13,8 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import HomeConnectedMacDeviceRowModals from "@/features/home/HomeConnectedMacDeviceRowModals";
 import useMacDeviceSeeLocalLog from "@/features/home/hooks/useMacDeviceSeeLocalLog";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
-import DeviceUpdateButton from "@/features/shell/v5/DeviceUpdateButton";
-import { resolveDeviceUpdateAction } from "@/features/shell/v5/resolveDeviceUpdateAction";
+import { DeviceUpdateButton } from "@/features/shell/v5/public-api/presentation";
+import { resolveDeviceUpdateAction } from "@/features/shell/v5/public-api/types";
 
 interface HomeConnectedMacDeviceRowProps {
   readonly device: MyMacDevice;

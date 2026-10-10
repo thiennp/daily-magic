@@ -2,7 +2,7 @@
 
 import AppShellDevicesPanel from "@/features/shell/AppShellDevicesPanel";
 import AppShellNav from "@/features/shell/AppShellNav";
-import { APP_SHELL_V5_SIDE_PANEL_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
+import { APP_SHELL_V5_SIDE_PANEL_CLASS } from "@/features/shell/v5/public-api/types";
 
 interface AppShellSidebarProps {
   readonly showDevicesRail?: boolean;

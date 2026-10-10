@@ -6,7 +6,7 @@
  */
 import { PROJECT_V5_NEUTRAL_CHIP_CLASS } from "@/features/projects/projectPageV5ChromeClasses.constant";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
-import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
+import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/public-api/types";
 
 export const PROJECTS_V5_PAGE_CLASS = `${APP_PAGE_STACK_CLASS} ${APP_SHELL_V5_FONT_CLASS}`;
 

@@ -27,3 +27,7 @@ Query: `npm run feature-knowledge:query -- "..." --feature=shell`
 
 `utils/` public API: import live-floater restore helpers from `@/features/shell/utils/public-api/presentation`.
 `hooks/` public API: import `useShellNavContext` from `@/features/shell/hooks/public-api/presentation`.
+
+## v5 public API
+
+`v5/public-api/types.ts` (copy and class constants, `resolveDeviceUpdateAction`) and `v5/public-api/presentation.ts` (`AppShellBrand`, `AppShellComputersHeading`, `AppShellDevicesSurface`, `DeviceUpdateButton`). Import the v5 slice only through these files.

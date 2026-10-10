@@ -10,13 +10,13 @@ import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConne
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
-import AppShellComputersHeading from "@/features/shell/v5/AppShellComputersHeading";
-import AppShellDevicesSurface from "@/features/shell/v5/AppShellDevicesSurface";
+import { AppShellComputersHeading } from "@/features/shell/v5/public-api/presentation";
+import { AppShellDevicesSurface } from "@/features/shell/v5/public-api/presentation";
 import {
   APP_SHELL_V5_META_CLASS,
   APP_SHELL_V5_SECTION_CLASS,
   APP_SHELL_V5_PILL_BUTTON_CLASS,
-} from "@/features/shell/v5/appShellV5Classes.constant";
+} from "@/features/shell/v5/public-api/types";
 import {
   buildMacDevicesStatusLine,
   countMacPresenceTiers,

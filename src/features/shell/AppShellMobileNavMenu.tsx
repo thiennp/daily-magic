@@ -9,8 +9,8 @@ import AppIcon from "@/components/ui/icon/AppIcon";
 import { useTheme } from "@/context/ThemeContext";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
 import { useShellNavContext } from "@/features/shell/hooks/public-api/presentation";
-import AppShellBrand from "@/features/shell/v5/AppShellBrand";
-import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/appShellV5Classes.constant";
+import { AppShellBrand } from "@/features/shell/v5/public-api/presentation";
+import { APP_SHELL_V5_FONT_CLASS } from "@/features/shell/v5/public-api/types";
 import { ListIcon } from "@/icons";
 import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
 

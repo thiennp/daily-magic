@@ -4,12 +4,12 @@ import { useState } from "react";
 
 import ConnectCursorCloudModal from "@/features/home/ConnectCursorCloudModal";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
-import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/appShellComputersCopy.constant";
+import { APP_SHELL_COMPUTERS_COPY } from "@/features/shell/v5/public-api/types";
 import {
   APP_SHELL_V5_HEADING_CLASS,
   APP_SHELL_V5_META_CLASS,
   APP_SHELL_V5_PILL_BUTTON_CLASS,
-} from "@/features/shell/v5/appShellV5Classes.constant";
+} from "@/features/shell/v5/public-api/types";
 
 /** Shell Cursor Cloud row (V5-2 chrome). Connect / Disconnect as today. */
 export default function ConnectCursorCloudCard() {
