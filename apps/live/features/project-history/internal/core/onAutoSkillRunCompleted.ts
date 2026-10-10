@@ -29,6 +29,8 @@ export const onAutoSkillRunCompleted = async (
     readonly folderPath?: string;
     /** Agent output holding the [[WAVE_PLAN]] block, when there is one. */
     readonly agentOutput?: string;
+    /** Shown on the strip instead of the judge note (a scan's "Checking 2 of 5"). */
+    readonly statusNote?: string;
   },
   deps: OnAutoSkillRunCompletedDeps,
 ): Promise<AutoSkillOutcome> => {
@@ -49,7 +51,7 @@ export const onAutoSkillRunCompleted = async (
         judgeKind: choice.ok ? choice.kind : null,
         judgeLabel: choice.ok ? choice.label : null,
         pausedReason: choice.ok ? null : choice.pausedReason,
-        note: choice.ok ? choice.note : null,
+        note: input.statusNote ?? (choice.ok ? choice.note : null),
       })
       .catch(() => undefined);
     if (!choice.ok) {

@@ -41,6 +41,8 @@ export const reportAutoSkillRunCompleted = async (input: {
   readonly layout?: AgentWitchLocalLayout;
   /** Agent output; its [[WAVE_PLAN]] block is the preferred module source. */
   readonly agentOutput?: string;
+  /** Progress line the strip shows while a scan works through runs. */
+  readonly statusNote?: string;
 }): Promise<AutoSkillOutcome> =>
   onAutoSkillRunCompleted(
     {
@@ -51,6 +53,9 @@ export const reportAutoSkillRunCompleted = async (input: {
         : {}),
       ...(input.agentOutput !== undefined
         ? { agentOutput: input.agentOutput }
+        : {}),
+      ...(input.statusNote !== undefined
+        ? { statusNote: input.statusNote }
         : {}),
     },
     {

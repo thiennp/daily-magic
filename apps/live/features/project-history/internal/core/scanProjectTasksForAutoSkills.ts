@@ -83,6 +83,13 @@ const readStoredTasks = (projectId: string): StoredTask[] => {
 const plural = (n: number, word: string): string =>
   `${n} ${word}${n === 1 ? "" : "s"}`;
 
+/** Strip line while a scan works through runs; the page treats it as "still running". */
+export const describeScanProgress = (
+  kind: "task" | "commit",
+  done: number,
+  total: number,
+): string => `Checking ${kind} ${done} of ${total}…`;
+
 export const describeScan = (
   summary: AutoSkillScanSummary,
   branch: string | null = null,
@@ -115,7 +122,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly projectId: string;
   readonly folderPath?: string;
-  /** Newest commits of the main branch to feed; default 100. */
+  /** Newest commits of the main branch to feed; default 5. */
   readonly commits?: number;
 }): Promise<AutoSkillScanSummary> => {
   const outcomes: Partial<Record<AutoSkillOutcome, number>> = {};
@@ -126,7 +133,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
     tasks = [];
   }
   let stopped = false;
-  for (const task of tasks) {
+  for (const [index, task] of tasks.entries()) {
     const outcome = await reportAutoSkillRunCompleted({
       cloudApi: input.cloudApi,
       projectId: input.projectId,
@@ -140,6 +147,7 @@ export const scanProjectTasksForAutoSkills = async (input: {
           (task.promptBody ?? "").split("\n", 1)[0]?.trim().slice(0, 120) ?? "",
       },
       layout: input.layout,
+      statusNote: describeScanProgress("task", index + 1, tasks.length),
       ...(input.folderPath !== undefined
         ? { folderPath: input.folderPath }
         : {}),
@@ -159,7 +167,8 @@ export const scanProjectTasksForAutoSkills = async (input: {
           clampScanCommits(input.commits),
         ).catch(() => null);
   // Oldest first so a repeat is noticed on its second occurrence, as in a live run.
-  for (const commit of [...(history?.commits ?? [])].reverse()) {
+  const commitsToScan = [...(history?.commits ?? [])].reverse();
+  for (const [index, commit] of commitsToScan.entries()) {
     const outcome = await reportAutoSkillRunCompleted({
       cloudApi: input.cloudApi,
       projectId: input.projectId,
@@ -173,6 +182,11 @@ export const scanProjectTasksForAutoSkills = async (input: {
       },
       layout: input.layout,
       folderPath: input.folderPath ?? "",
+      statusNote: describeScanProgress(
+        "commit",
+        index + 1,
+        commitsToScan.length,
+      ),
     });
     outcomes[outcome] = (outcomes[outcome] ?? 0) + 1;
     if (outcome === "disabled" || outcome === "paused") {

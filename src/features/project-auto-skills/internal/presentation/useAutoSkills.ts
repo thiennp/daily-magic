@@ -43,6 +43,7 @@ export const useAutoSkills = (
   const scanState = useAutoSkillScan({
     projectId,
     lastCheckedAt: overview?.lastCheckedAt ?? null,
+    statusNote: overview?.statusNote ?? null,
     reload,
   });
 

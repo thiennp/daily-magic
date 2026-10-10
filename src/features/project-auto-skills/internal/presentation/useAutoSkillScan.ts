@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { isAutoSkillScanProgressNote } from "@/features/project-auto-skills/internal/core/isAutoSkillScanProgressNote";
 import { postAutoSkillScan } from "@/features/project-auto-skills/internal/presentation/autoSkillsApi";
 
 const SCAN_POLL_MS = 4_000;
@@ -26,9 +27,11 @@ export interface AutoSkillScan {
 export const useAutoSkillScan = (input: {
   readonly projectId: string;
   readonly lastCheckedAt: string | null;
+  /** The computer's last status line; a progress line means the scan is still going. */
+  readonly statusNote?: string | null;
   readonly reload: () => void;
 }): AutoSkillScan => {
-  const { projectId, lastCheckedAt, reload } = input;
+  const { projectId, lastCheckedAt, reload, statusNote = null } = input;
   const [scanning, setScanning] = useState(false);
   const [scanningDocs, setScanningDocs] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
@@ -39,7 +42,11 @@ export const useAutoSkillScan = (input: {
     if (!scanning) {
       return;
     }
-    const finished = lastCheckedAt !== checkedBefore.current;
+    const progressing = isAutoSkillScanProgressNote(statusNote);
+    if (progressing) {
+      startedAtMs.current = Date.now(); // alive: each new line restarts the wait
+    }
+    const finished = lastCheckedAt !== checkedBefore.current && !progressing;
     if (finished || Date.now() - startedAtMs.current > SCAN_MAX_WAIT_MS) {
       setScanning(false);
       setScanningDocs(false);
@@ -47,7 +54,7 @@ export const useAutoSkillScan = (input: {
     }
     const timer = setTimeout(reload, SCAN_POLL_MS);
     return () => clearTimeout(timer);
-  }, [scanning, lastCheckedAt, reload]);
+  }, [scanning, lastCheckedAt, statusNote, reload]);
 
   const run = useCallback(
     async (docs: boolean, commits?: number): Promise<void> => {
