@@ -19,19 +19,15 @@ const probeDatabase = async (
   checkDatabase: () => Promise<unknown>,
   timeoutMs: number,
 ): Promise<AgentWitchReadinessPayload["database"]> => {
-  let timer: NodeJS.Timeout | undefined;
+  // unref: the timer must never keep the process alive after the race ends.
   const timeout = new Promise<typeof TIMEOUT_MARKER>((resolve) => {
-    timer = setTimeout(() => resolve(TIMEOUT_MARKER), timeoutMs);
+    setTimeout(() => resolve(TIMEOUT_MARKER), timeoutMs).unref();
   });
   try {
     const outcome = await Promise.race([checkDatabase(), timeout]);
     return outcome === TIMEOUT_MARKER ? "timeout" : "ok";
   } catch {
     return "unreachable";
-  } finally {
-    if (timer !== undefined) {
-      clearTimeout(timer);
-    }
   }
 };
 
