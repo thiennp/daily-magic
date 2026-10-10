@@ -109,7 +109,8 @@
     "src/features/projects/tasks": "importers AwcMessengerAiSessionRow.tsx, AwcProjectMessengerSection.tsx over max-effective-lines",
     "src/features/projects/access/hooks": "outside importers need test helpers (reactHookRunner.testUtils, createdInviteBanner.testUtils) and vi.mock/source-read of private hook files",
     "src/features/home/hooks": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing); repointing its imports trips the architecture pre-commit",
-    "src/features/home/utils": "importer HomeNotLinkedConnectBlock.tsx over 100-line limit trips architecture check"
+    "src/features/home/utils": "importer HomeNotLinkedConnectBlock.tsx over 100-line limit trips architecture check",
+    "src/features/projects/messenger/oneWindow": "importer AwcProjectMessengerSection.tsx over 100-line limit trips pre-commit"
   },
   "rounds": [
     {
