@@ -12,7 +12,7 @@ Prior reading: [Chapter 0](00-philosophy-and-mismatch-traps.md) · [AGENTS.md](.
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Node.js 24**        | Matches CI (see root `package.json` / workflows)                                                                                                                        |
 | **Neon PostgreSQL**   | Empty project DB for daily-magic schema — not a shared unrelated Neon                                                                                                   |
-| **`psql`** (optional) | For `npm run db:schema`; migrations use `tsx` + Neon driver                                                                                                             |
+| **`psql`** (optional) | For `npm run db:schema`; migrations use `tsx` + `pg` driver                                                                                                             |
 | **Mac** (optional)    | AWL/AWB plus Mac AWI for the local Mac app. An x86_64 Linux host can run AWI for dispatch; cloud-only work skips both ([Q&A](../../qa/linux-browser-vs-linux-host.md)). |
 
 ---

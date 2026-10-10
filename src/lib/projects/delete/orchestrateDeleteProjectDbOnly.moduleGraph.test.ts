@@ -26,7 +26,7 @@ describe("project delete module graph is DB-only", () => {
   it("lists the runtime packages it does use (DB driver only)", () => {
     expect([...bare].sort()).toMatchInlineSnapshot(`
       [
-        "@neondatabase/serverless",
+        "pg",
       ]
     `);
   });

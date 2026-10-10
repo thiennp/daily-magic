@@ -1,8 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { neonConfig, Pool } from "@neondatabase/serverless";
-import ws from "ws";
+import { Pool } from "pg";
 
 import { applyDbMigrationFile } from "./applyDbMigrationFile";
 import {
@@ -10,8 +9,6 @@ import {
   listPendingMigrationFilenames,
   sortMigrationFilenames,
 } from "./db-migrate.util";
-
-neonConfig.webSocketConstructor = ws;
 
 const MIGRATIONS_DIR = join(process.cwd(), "db/migrations");
 

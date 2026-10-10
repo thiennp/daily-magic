@@ -100,7 +100,6 @@
     "svgo": "3.3.5"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.1.0",
     "@next/third-parties": "^16.3.6",
     "@tailwindcss/forms": "^0.5.11",
     "@xterm/addon-fit": "^0.11.0",
@@ -113,6 +112,7 @@
     "next-auth": "^5.0.0-beta.32",
     "node-pty": "^1.1.0",
     "pdf-parse": "^1.1.1",
+    "pg": "^8.23.1",
     "react": "19.2.4",
     "react-apexcharts": "^2.1.1",
     "react-dom": "19.2.4",
@@ -131,6 +131,7 @@
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
