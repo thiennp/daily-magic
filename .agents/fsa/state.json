@@ -14,7 +14,8 @@
     "src/features/agent/components",
     "src/features/agent/icons",
     "src/features/agent/hooks/types",
-    "src/features/reports/types"
+    "src/features/reports/types",
+    "src/features/projects/navConsolidation"
   ],
   "blocked": {},
   "rounds": [
@@ -92,6 +93,11 @@
       "unit": "src/features/reports/types",
       "sha": "f4119204871618f8015bfe8773121b288e37cc59",
       "at": "2026-10-10T09:05:24.129Z"
+    },
+    {
+      "unit": "src/features/projects/navConsolidation",
+      "sha": "e5e5f481a3432f5ee007ec89c4913f497c016ca9",
+      "at": "2026-10-10T09:08:40.318Z"
     }
   ]
 }

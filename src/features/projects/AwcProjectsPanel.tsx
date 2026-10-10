@@ -10,8 +10,10 @@ import { AwcMyProjectInvitations } from "@/features/projects/invitations/public-
 import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsManageControls from "@/features/projects/AwcProjectsManageControls";
 import MyBotsPanel from "@/features/my-bots/MyBotsPanel";
-import AwcProjectsIntentNotice from "@/features/projects/navConsolidation/AwcProjectsIntentNotice";
-import { parseProjectsNavIntent } from "@/features/projects/navConsolidation/parseProjectsNavIntent";
+import {
+  AwcProjectsIntentNotice,
+  parseProjectsNavIntent,
+} from "@/features/projects/navConsolidation/public-api/presentation";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
 import AppPanel from "@/components/surfaces/AppPanel";

@@ -22,7 +22,7 @@ import formatProjectFolderPathForList from "@/features/projects/utils/formatProj
 import resolveProjectListCardTitle from "@/features/projects/utils/resolveProjectListCardTitle";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import { buildProjectCardHrefForIntent } from "@/features/projects/navConsolidation/buildProjectCardHrefForIntent";
+import { buildProjectCardHrefForIntent } from "@/features/projects/navConsolidation/public-api/presentation";
 import type { NavConsolidationIntent } from "@/lib/shell/navConsolidationIntent.constant";
 
 interface AwcProjectCardProps {
