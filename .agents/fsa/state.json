@@ -47,7 +47,9 @@
     "src/features/auth",
     "src/features/billing"
   ],
-  "blocked": {},
+  "blocked": {
+    "src/features/home/constants": "importer HomeNotLinkedConnectBlock.tsx exceeds 100 effective lines (pre-existing), pre-commit architecture gate fails when it is edited"
+  },
   "rounds": [
     {
       "unit": "src/features/agent-witch/mac-bootstrap",
