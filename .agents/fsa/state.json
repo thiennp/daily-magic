@@ -100,7 +100,8 @@
     "src/features/projects/messenger/utils": "touched importers exceed 100-line architecture limit after prettier (useAwcProjectMessengerThread, AwcProjectMessengerSection, AwcMessengerAiSessionRow, oneWindow tests)",
     "src/features/projects/access/utils": "5 importers (AwcProjectAccessMemberRow, MemberTaskPulse, MembersList, useAwcProjectAccessPendingListState, AwcProjectInboxDispatchForm) are not prettier-clean; pre-commit reformat pushes them over max-effective-lines 100, so import-only repoint cannot pass the hook",
     "src/features/projects/access/invites": "importer useCreatedInviteBanner.ts is over max-effective-lines (140), repointing it fails architecture check",
-    "src/features/projects/messenger/types": "importers AwcMessengerAiSessionRow.tsx, useAwcProjectMessengerThread.ts, messengerChatStore.fixtures.ts over max-effective-lines"
+    "src/features/projects/messenger/types": "importers AwcMessengerAiSessionRow.tsx, useAwcProjectMessengerThread.ts, messengerChatStore.fixtures.ts over max-effective-lines",
+    "src/features/projects/tasks": "importers AwcMessengerAiSessionRow.tsx, AwcProjectMessengerSection.tsx over max-effective-lines"
   },
   "rounds": [
     {
