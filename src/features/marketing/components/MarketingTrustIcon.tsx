@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 
 import AppIcon from "@/components/ui/icon/AppIcon";
-import type { MarketingTrustIconKey } from "@/features/marketing/types/MarketingTrustItem.type";
+import type { MarketingTrustIconKey } from "@/features/marketing/types/public-api/types";
 import { BoltIcon, CheckCircleIcon, LockIcon, PlugInIcon } from "@/icons";
 
 const TRUST_ICON_MAP: Record<MarketingTrustIconKey, () => ReactElement> = {

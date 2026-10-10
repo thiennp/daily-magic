@@ -1,4 +1,4 @@
-import type MarketingTrustItem from "@/features/marketing/types/MarketingTrustItem.type";
+import type { MarketingTrustItem } from "@/features/marketing/types/public-api/types";
 
 export const MARKETING_TRUST_ITEMS: readonly MarketingTrustItem[] = [
   {
